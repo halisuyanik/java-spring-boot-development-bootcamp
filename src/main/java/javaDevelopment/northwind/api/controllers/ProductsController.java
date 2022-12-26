@@ -14,6 +14,7 @@ import javaDevelopment.northwind.business.abstracts.ProductService;
 import javaDevelopment.northwind.core.utilities.results.DataResult;
 import javaDevelopment.northwind.core.utilities.results.Result;
 import javaDevelopment.northwind.entities.concretes.Product;
+import javaDevelopment.northwind.entities.dtos.ProductWithCategoryDto;
 
 @RestController
 @RequestMapping("/api/products")
@@ -38,5 +39,35 @@ public class ProductsController {
 	@GetMapping("/getByProductName")
 	public DataResult<Product> getByProductName(@RequestParam String productName){
 		return this.productService.getByProductName(productName);
+	}
+	
+	@GetMapping("/getByProductNameAndCategoryId")
+	public DataResult<Product>getByProductNameAndCategoryId(@RequestParam("productName") String productName, @RequestParam("categoryId") int categoryId){
+		return this.productService.getByProductNameAndCategoryId(productName, categoryId);
+	}
+	@GetMapping("/getByProductNameContains")
+	public DataResult<List<Product>> getByProductNameContains(@RequestParam String productName){
+		return this.productService.getByProductNameContains(productName);
+	}
+	@GetMapping("/getAllByPage")
+	DataResult<List<Product>> getAll(int pageNo, int pageSize){
+		return this.productService.getAll(pageNo, pageSize);
+	}
+	@GetMapping("/getAllDesc")
+	public DataResult<List<Product>> getAllSorted() {
+		return this.productService.getAllSorted();
+	}
+	@GetMapping("/getByProductNameOrCategoryId")
+	public DataResult<List<Product>> getByProductNameOrCategoryId(String productName, int categoryId){
+		return this.productService.getByProductNameOrCategoryId(productName, categoryId);
+	}
+	@GetMapping("/getByProductNameStartsWith")
+	public DataResult<List<Product>> getByProductNameStartsWith(String productName){
+		return this.productService.getByProductNameStartsWith(productName);
+	}
+	
+	@GetMapping("/getProductDetails")
+	public DataResult<List<ProductWithCategoryDto>> getProductDetails(){
+		return this.productService.getProductDetails();
 	}
 }

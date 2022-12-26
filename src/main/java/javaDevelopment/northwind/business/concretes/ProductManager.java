@@ -3,6 +3,9 @@ package javaDevelopment.northwind.business.concretes;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javaDevelopment.northwind.business.abstracts.ProductService;
@@ -12,6 +15,7 @@ import javaDevelopment.northwind.core.utilities.results.SuccesResult;
 import javaDevelopment.northwind.core.utilities.results.SuccessDataResult;
 import javaDevelopment.northwind.dataAccess.abstracts.ProductDao;
 import javaDevelopment.northwind.entities.concretes.Product;
+import javaDevelopment.northwind.entities.dtos.ProductWithCategoryDto;
 
 @Service
 public class ProductManager implements ProductService {
@@ -41,17 +45,17 @@ public class ProductManager implements ProductService {
 	}
 
 	@Override
-	public DataResult<Product> getByProductNameAndCategory(String productName, int categoryId) {
-		return new SuccessDataResult<Product>(this.productDao.getByProductNameAndCategory(productName, categoryId), "is listed");	
+	public DataResult<Product> getByProductNameAndCategoryId(String productName, int categoryId) {
+		return new SuccessDataResult<Product>(this.productDao.getByProductNameAndCategory_CategoryId(productName, categoryId), "is listed");	
 	}
 
 	@Override
-	public DataResult<List<Product>> getByProductNameOrCategory(String productName, int categoryId) {
-		return new SuccessDataResult<List<Product>>(this.productDao.getByProductNameOrCategory(productName, categoryId), "is listed");	
+	public DataResult<List<Product>> getByProductNameOrCategoryId(String productName, int categoryId) {
+		return new SuccessDataResult<List<Product>>(this.productDao.getByProductNameOrCategory_CategoryId(productName, categoryId), "is listed");	
 	}
 
 	@Override
-	public DataResult<List<Product>> getByCategoryIn(List<Integer> categories) {
+	public DataResult<List<Product>> getByCategoryIdIn(List<Integer> categories) {
 		return new SuccessDataResult<List<Product>>(this.productDao.getByCategoryIn(categories), "is listed");	
 	}
 
@@ -70,4 +74,20 @@ public class ProductManager implements ProductService {
 		return new SuccessDataResult<List<Product>>(this.productDao.getByNameAndCategory(productName, categoryId), "is listed");	
 	}
 
+	@Override
+	public DataResult<List<Product>> getAll(int pageNo, int pageSize) {
+		Pageable pageable=PageRequest.of(pageNo-1, pageSize);
+		return new SuccessDataResult<List<Product>>(this.productDao.findAll(pageable).getContent(),"is listed");
+	}
+
+	@Override
+	public DataResult<List<Product>> getAllSorted() {
+		Sort sort=Sort.by(Sort.Direction.DESC, "productName");
+		return new SuccessDataResult<List<Product>>(this.productDao.findAll(sort),"succed");
+	}
+	@Override
+	public DataResult<List<ProductWithCategoryDto>> getProductDetails(){
+		return new SuccessDataResult<List<ProductWithCategoryDto>>(this.productDao.getProductDetails(), "is listed");
+	}
+	
 }
